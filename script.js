@@ -25,3 +25,13 @@ function operate(operator, operand1, operand2) {
     return multiply(operand1, operand2);
   }
 }
+
+let display = document.querySelector(".display");
+let buttons = document.querySelectorAll(".number");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    let value = event.target.textContent;
+    display.textContent += value;
+  });
+});

@@ -1,8 +1,9 @@
 /* TODO: 
-  - sign button, done 
-  - modulo button, 
-  - and decimal button
+  - add keyboard supprt
+  - backspace button?
 */
+const MAX_LENGTH = 15;
+
 const add = function (a, b) {
   return Number(a) + Number(b);
 };
@@ -39,6 +40,7 @@ let operatorButtons = document.querySelectorAll(".operator");
 let clearButton = document.querySelector(".clear");
 let signButton = document.querySelector(".sign");
 let decimalButton = document.querySelector(".decimal");
+let moduloButton = document.querySelector(".modulo");
 
 /** HELPER VARS */
 let toDisplay = "";
@@ -51,17 +53,34 @@ let currOperator = null;
 let secondOperand = null;
 
 /** FUNCTIONS */
-function sliced(value) {
-  string = value.toString(); //in case it's not a string
-  return string.slice(0, 10);
-  // calculator screen can fit 10 digits
+function roundToTenDigits(value) {
+  // if (value.toString().includes("e")) {
+  //   return "😵‍💫😵‍💫😵‍💫"; //number too big
+  // }
+
+  // number could be too big for the screen and/or have an e in it
+  /**
+   * if value.toString().length > 10
+   *  - if it has an e:
+   *    -
+   *  - else:
+   *    - give it an e. Number(value).toPrecision(5) base=5, exp=5
+   *    -
+   */
+  res = value.toString();
+  if (res.length > MAX_LENGTH) {
+    base_length = MAX_LENGTH - 6; //5 for the exponent (e+255) and 1 for the decimal
+    res = Number(res).toPrecision(base_length).toString();
+  }
+  return res;
 }
+
 function appendDisplay(newDigit) {
   toDisplay += newDigit;
   display.textContent = toDisplay;
 }
 function updateDisplay(newNum) {
-  toDisplay = sliced(newNum);
+  toDisplay = roundToTenDigits(newNum);
   display.textContent = toDisplay;
 }
 function clearDisplay() {
@@ -86,14 +105,19 @@ numButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
     let value = event.target.textContent;
     if (isSolutionOnDisplay) {
+      // If a solution is currently displayed, start fresh with the new value
       updateDisplay(value);
       isSolutionOnDisplay = false;
     } else {
-      if (display.textContent.length < 10) {
-        if (value == 0 && display.textContent == "0") {
-          return;
-        }
+      // If the display is empty and the value is not zero, append the value
+      if (toDisplay === "" && value !== "0") {
         appendDisplay(value);
+      } else if (display.textContent.length < MAX_LENGTH) {
+        // If the display has less than 10 characters, append the value
+        if (!(value === "0" && Number(display.textContent) === 0)) {
+          // Prevent appending multiple zeros to a lone zero
+          appendDisplay(value);
+        }
       }
     }
   });
@@ -119,9 +143,12 @@ operatorButtons.forEach((button) => {
 equalButton.addEventListener("click", (event) => {
   secondOperand = display.textContent;
   if (firstOperand && secondOperand && currOperator) {
-    let solution = operate(currOperator, firstOperand, secondOperand);
-    if (!isFinite(solution)) {
-      solution = ";|";
+    let solution;
+    if (Number(secondOperand) == 0 && currOperator == "/") {
+      // catch divide by zero
+      solution = "😂😂😐😐😐";
+    } else {
+      solution = operate(currOperator, firstOperand, secondOperand);
     }
     updateDisplay(solution);
     resetAllOperatorVars();
@@ -151,7 +178,7 @@ signButton.addEventListener("click", (event) => {
 
   if (current_display[0] != "-") {
     // add negative sign
-    if (current_display.length >= 10) {
+    if (current_display.length >= MAX_LENGTH) {
       cutOffbyNegSign = current_display.at(-1);
     }
     updateDisplay("-" + current_display);
@@ -161,9 +188,38 @@ signButton.addEventListener("click", (event) => {
     updateDisplay(newDisplay);
   }
 });
-
 decimalButton.addEventListener("click", (event) => {
   /*
-  
+  if the display does not already has a decimal point, append "."
   */
+  //  TODO:
+  //  is solution on dislplay check
+  // dispaly >= 10 check
+  if (display.textContent.includes(".")) {
+    return;
+  }
+  if (isSolutionOnDisplay) {
+    updateDisplay("0.");
+    isSolutionOnDisplay = false;
+  } else {
+    if (toDisplay === "") {
+      appendDisplay("0.");
+    } else if (display.textContent.length < MAX_LENGTH) {
+      // if (value == 0 && display.textContent == "0") {
+      //   return;
+      // }
+      appendDisplay(".");
+    }
+  }
+});
+
+moduloButton.addEventListener("click", (event) => {
+  /**
+   * divide the displayed number by 100
+   * display it
+   */
+  if (Number(display.textContent) != "0") {
+    let current_display = Number(display.textContent);
+    updateDisplay(current_display / 100);
+  }
 });

@@ -1,67 +1,116 @@
-/* BODY && MAIN CONTAINER */
+/* BODY AND MAIN CONTAINER */
 
 body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 95vh;
+  height: 100vh;
+  margin: 0;
+  background-color: #56799d;
   font-family: "JetBrains Mono", monospace;
-  /* background-color: lightskyblue; */
 }
+
 .main-container {
-  outline: 1px solid red;
+  background-color: #34495e;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 400px;
 }
 
 /* DISPLAY */
 
 .display {
-  outline: 1px solid red;
-  box-sizing: border-box;
+  background-color: #2c3e50;
+  border-radius: 5px;
   height: 80px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
-  font-size: 55px;
-  font-weight: 700;
-  margin: 5px;
-  padding-right: 2px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ecf0f1;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* BUTTONS CONTAINER */
+
+.main-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
 }
 
 /* BUTTONS */
 
-.main-buttons-container {
-  outline: 1px solid red;
-  justify-content: space-between;
-  width: 350px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-
-  /* flex-wrap: wrap; */
-  gap: 5px;
-  padding: 5px;
-}
-.row {
-  display: flex;
-  flex: 1;
-  /* flex-wrap: wrap; */
-  gap: 5px;
-}
 button {
-  font-size: 25px;
+  font-size: 1.5rem;
   font-family: "JetBrains Mono", monospace;
-  /* width: 40px;
-  height: 40px; */
   flex: 1;
-  box-sizing: border-box;
-  /* padding:20px; */
-  /* padding: 40px 20px; */
+  padding: 15px;
+  border: none;
   border-radius: 5px;
+  color: #ecf0f1;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
 }
-.zero {
-  flex: 7;
+
+button:active {
+  transform: scale(0.95);
 }
-.decimal,
+
+/* BUTTON COLORS */
+
+.clear {
+  background-color: #e74c3c;
+}
+
+.sign,
+.modulo {
+  background-color: #3498db;
+}
+
+.operator {
+  background-color: #e67e22;
+}
+
+.number {
+  background-color: #7f8c8d;
+}
+
 .equals {
-  flex: 3;
+  background-color: #27ae60;
+}
+
+.decimal {
+  background-color: #16a085;
+}
+
+button:hover {
+  background-color: #95a5a6;
+}
+
+.clear:hover {
+  background-color: #c0392b;
+}
+
+.operator:hover {
+  background-color: #d35400;
+}
+
+.equals:hover {
+  background-color: #2ecc71;
+}
+
+/* SPECIAL BUTTONS */
+
+.zero {
+  flex: 2;
 }
